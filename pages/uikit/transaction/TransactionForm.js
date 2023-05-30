@@ -18,12 +18,12 @@ const TransactionForm = () => {
             const docRef = doc(db, "transactions", transaction.id)
             const transactionUpdated = {...transaction, timestamp:serverTimestamp()}
             updateDoc(docRef, transactionUpdated)
-            setTransaction({ name:'', total:0, product:'' })
+            setTransaction({ name:'', total:'', product:'' })
             showAlert('success', `Transaction with id ${docRef.id} is updated succesfully`)
         } else {
             const collectionRef = collection(db, "transactions")
             const docRef = await addDoc(collectionRef, { ...transaction, timestamp:serverTimestamp() })
-            setTransaction({ name:'', total:0, product:'' })
+            setTransaction({ name:'', total:'', product:'' })
             showAlert('success', `Transaction with id ${docRef.id} is added succesfully`)
         }
        
@@ -35,7 +35,7 @@ const TransactionForm = () => {
         const checkIfClickedOutside = e => {
             if(!inputAreaRef.current.contains(e.target)){
                 console.log('Outside input area');
-                setTransaction({ name:'', total:0, product:'' })
+                setTransaction({ name:'', total:'', product:'' })
             } else {
                 console.log('Inside input area');
             }

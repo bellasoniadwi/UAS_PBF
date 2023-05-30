@@ -18,12 +18,12 @@ const MemberForm = () => {
             const docRef = doc(db, "members", member.id)
             const memberUpdated = {...member, timestamp:serverTimestamp()}
             updateDoc(docRef, memberUpdated)
-            setMember({ name:'', alamat:'', usia:0, telepon:'' })
+            setMember({ name:'', alamat:'', usia:'', telepon:'' })
             showAlert('success', `Member with id ${docRef.id} is updated succesfully`)
         } else {
             const collectionRef = collection(db, "members")
             const docRef = await addDoc(collectionRef, { ...member, timestamp:serverTimestamp() })
-            setMember({ name:'', alamat:'', usia:0, telepon:'' })
+            setMember({ name:'', alamat:'', usia:'', telepon:'' })
             showAlert('success', `Member with id ${docRef.id} is added succesfully`)
         }
     }
@@ -34,7 +34,7 @@ const MemberForm = () => {
         const checkIfClickedOutside = e => {
             if(!inputAreaRef.current.contains(e.target)){
                 console.log('Outside input area');
-                setMember({ name:'', alamat:'', usia:0, telepon:'' })
+                setMember({ name:'', alamat:'', usia:'', telepon:'' })
             } else {
                 console.log('Inside input area');
             }

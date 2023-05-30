@@ -18,12 +18,12 @@ const ProductForm = () => {
             const docRef = doc(db, "products", product.id)
             const productUpdated = {...product, timestamp:serverTimestamp()}
             updateDoc(docRef, productUpdated)
-            setProduct({ name:'', harga:0, kategori:'' })
+            setProduct({ name:'', harga:'', kategori:'' })
             showAlert('success', `Product with id ${docRef.id} is updated succesfully`)
         } else {
             const collectionRef = collection(db, "products")
             const docRef = await addDoc(collectionRef, { ...product, timestamp:serverTimestamp() })
-            setProduct({ name:'', harga:0, kategori:'' })
+            setProduct({ name:'', harga:'', kategori:'' })
             showAlert('success', `Product with id ${docRef.id} is added succesfully`)
         }
        
@@ -35,7 +35,7 @@ const ProductForm = () => {
         const checkIfClickedOutside = e => {
             if(!inputAreaRef.current.contains(e.target)){
                 console.log('Outside input area');
-                setProduct({ name:'', harga:0, kategori:'' })
+                setProduct({ name:'', harga:'', kategori:'' })
             } else {
                 console.log('Inside input area');
             }
