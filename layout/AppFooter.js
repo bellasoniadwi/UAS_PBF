@@ -7,7 +7,7 @@ const AppFooter = () => {
     return (
         <div className="layout-footer">
             <img src={`/layout/images/logo-${layoutConfig.colorScheme === 'light' ? 'dark' : 'white'}.svg`} alt="Logo" height="20" className="mr-2" />
-            by
+            Tugas Besar Pemrograman Berbasis Objek ini dibuat oleh
             <span className="font-medium ml-2">Anjani - Bella</span>
         </div>
     );

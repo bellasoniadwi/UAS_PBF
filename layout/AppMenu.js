@@ -12,12 +12,12 @@ const AppMenu = () => {
             items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/uikit/charts' }]
         },
         {
-            label: 'UI Components',
+            label: 'Data Master',
             items: [
                 { label: 'Employee', icon: 'pi pi-fw pi-id-card', to: '/uikit/employee' },
-                { label: 'Member', icon: 'pi pi-fw pi-check-square', to: '/uikit/member' },
-                { label: 'Product', icon: 'pi pi-fw pi-bookmark', to: '/uikit/product' },
-                { label: 'Transaction', icon: 'pi pi-fw pi-exclamation-circle', to: '/uikit/transaction' },
+                { label: 'Member', icon: 'pi pi-fw pi-user', to: '/uikit/member' },
+                { label: 'Product', icon: 'pi pi-fw pi-list', to: '/uikit/product' },
+                { label: 'Transaction', icon: 'pi pi-fw pi-bookmark', to: '/uikit/transaction' },
             ]
         },
         
