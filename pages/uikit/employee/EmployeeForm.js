@@ -1,23 +1,53 @@
 import { Button, TextField } from "@mui/material"
-import { addDoc, collection, serverTimestamp } from "@firebase/firestore"
-import { useContext, useState } from "react"
+import { addDoc, collection, serverTimestamp, updateDoc, doc } from "@firebase/firestore"
+import { useContext, useEffect, useRef, useState } from "react"
 import { db } from "../../../firebase"
 import { EmployeeContext } from "./EmployeeContext"
 
 const EmployeeForm = () => {
-    const [employee, setEmployee] = useState({ name:'', email:'', telepon:'', jabatan:'' });
+    
     // snackbar
-    const { showAlert } = useContext(EmployeeContext);
+    const { showAlert, employee, setEmployee } = useContext(EmployeeContext);
+    
     // button submit
     const onSubmit = async () => {
-        const collectionRef = collection(db, "employees")
-        const docRef = await addDoc(collectionRef, { ...employee, timestamp:serverTimestamp() })
-        setEmployee({ name:'', email:'', jabatan:'', telepon:'' })
-        showAlert('success', `Employee with id ${docRef.id} is added succesfully`)
-       
+
+        //kondisi update
+        if(employee?.hasOwnProperty('timestamp')){
+            // lakukan update
+            const docRef = doc(db, "employees", employee.id)
+            const employeeUpdated = {...employee, timestamp:serverTimestamp()}
+            updateDoc(docRef, employeeUpdated)
+            setEmployee({ name:'', email:'', jabatan:'', telepon:'' })
+            showAlert('success', `Employee with id ${docRef.id} is updated succesfully`)
+        } else {
+            const collectionRef = collection(db, "employees")
+            const docRef = await addDoc(collectionRef, { ...employee, timestamp:serverTimestamp() })
+            setEmployee({ name:'', email:'', jabatan:'', telepon:'' })
+            showAlert('success', `Employee with id ${docRef.id} is added succesfully`)
+        }
     }
+
+    // detect input area
+    const inputAreaRef = useRef();
+    useEffect(() => {
+        const checkIfClickedOutside = e => {
+            if(!inputAreaRef.current.contains(e.target)){
+                console.log('Outside input area');
+                setEmployee({ name:'', email:'', jabatan:'', telepon:'' })
+            } else {
+                console.log('Inside input area');
+            }
+        }
+        document.addEventListener("mousedown", checkIfClickedOutside)
+        return () => {
+            document.removeEventListener("mousedown", checkIfClickedOutside)
+        }
+    }, [])
+
     return (
-        <div>
+        <div ref={inputAreaRef}>
+            {/* <pre>{JSON.stringify(employee, null, '\t')}</pre> */}
             <TextField fullWidth label="Name" margin="normal"
             value={employee.name} onChange={e => setEmployee({...employee, name:e.target.value})}
             />
@@ -30,7 +60,7 @@ const EmployeeForm = () => {
             <TextField fullWidth label="Jabatan" margin="normal"
             value={employee.jabatan} onChange={e => setEmployee({...employee, jabatan:e.target.value})}
             />
-            <Button onClick={onSubmit} variant="contained" sx={{ mt: 3 }}>Add a New Employee</Button>
+            <Button onClick={onSubmit} variant="contained" sx={{ mt: 3 }}>{employee.hasOwnProperty('timestamp')?'Update Employee':'Add a new Employee'}</Button>
         </div>
     )
 }

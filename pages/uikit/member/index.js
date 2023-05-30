@@ -9,6 +9,7 @@ import { MemberContext } from './MemberContext';
 
 const MemberDemo = () => {
     const [members, setMembers] = useState([])
+    const [member, setMember] = useState({ name:'', alamat:'', usia:'', telepon:'' });
 
     // snackbar
     const [open, setOpen] = useState(false)
@@ -41,7 +42,7 @@ const MemberDemo = () => {
     }, [])
 
     return (
-        <MemberContext.Provider value={{ showAlert }}>
+        <MemberContext.Provider value={{ showAlert, member, setMember }}>
             <Container maxWidth="sm">
                 <MemberForm/>
                 <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>

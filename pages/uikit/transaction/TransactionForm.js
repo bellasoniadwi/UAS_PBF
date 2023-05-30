@@ -1,23 +1,53 @@
 import { Button, TextField } from "@mui/material"
-import { addDoc, collection, serverTimestamp } from "@firebase/firestore"
-import { useContext, useState } from "react"
+import { addDoc, collection, serverTimestamp, updateDoc, doc } from "@firebase/firestore"
+import { useContext, useState, useRef, useEffect } from "react"
 import { db } from "../../../firebase"
 import { TransactionContext } from "./TransactionContext"
 
 const TransactionForm = () => {
-    const [transaction, setTransaction] = useState({ name:'', total:0, transaction:'' })
+    
     // snackbar
-    const { showAlert } = useContext(TransactionContext);
+    const { showAlert, transaction, setTransaction } = useContext(TransactionContext);
+
     // button submit
     const onSubmit = async () => {
-        const collectionRef = collection(db, "transactions")
-        const docRef = await addDoc(collectionRef, { ...transaction, timestamp:serverTimestamp() })
-        setTransaction({ name:'', harga:0, kategori:'' })
-        showAlert('success',`Transaction with id ${docRef.id} is added succesfully`)
+
+        //kondisi update
+        if(transaction?.hasOwnProperty('timestamp')){
+            // lakukan update
+            const docRef = doc(db, "transactions", transaction.id)
+            const transactionUpdated = {...transaction, timestamp:serverTimestamp()}
+            updateDoc(docRef, transactionUpdated)
+            setTransaction({ name:'', total:0, product:'' })
+            showAlert('success', `Transaction with id ${docRef.id} is updated succesfully`)
+        } else {
+            const collectionRef = collection(db, "transactions")
+            const docRef = await addDoc(collectionRef, { ...transaction, timestamp:serverTimestamp() })
+            setTransaction({ name:'', total:0, product:'' })
+            showAlert('success', `Transaction with id ${docRef.id} is added succesfully`)
+        }
        
     }
+
+    // detect input area
+    const inputAreaRef = useRef();
+    useEffect(() => {
+        const checkIfClickedOutside = e => {
+            if(!inputAreaRef.current.contains(e.target)){
+                console.log('Outside input area');
+                setTransaction({ name:'', total:0, product:'' })
+            } else {
+                console.log('Inside input area');
+            }
+        }
+        document.addEventListener("mousedown", checkIfClickedOutside)
+        return () => {
+            document.removeEventListener("mousedown", checkIfClickedOutside)
+        }
+    }, [])
+
     return (
-        <div>
+        <div ref={inputAreaRef}>
             <TextField fullWidth label="Name" margin="normal"
             value={transaction.name} onChange={e => setTransaction({...transaction, name:e.target.value})}
             />
@@ -27,7 +57,7 @@ const TransactionForm = () => {
             <TextField fullWidth label="Total" margin="normal"
             value={transaction.total} onChange={e => setTransaction({...transaction, total:e.target.value})}
             />
-            <Button onClick={onSubmit} variant="contained" sx={{ mt: 3 }}>Add a New Transaction</Button>
+            <Button onClick={onSubmit} variant="contained" sx={{ mt: 3 }}>{transaction.hasOwnProperty('timestamp')?'Update Transaction':'Add a new Transaction'}</Button>
         </div>
     )
 }

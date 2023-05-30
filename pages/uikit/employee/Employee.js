@@ -8,7 +8,7 @@ import { EmployeeContext } from "./EmployeeContext";
 
 const Employee = ({id, timestamp, name, email, telepon, jabatan}) => {
 
-    const {showAlert} = useContext(EmployeeContext);
+    const {showAlert, setEmployee} = useContext(EmployeeContext);
     // fungsi delete
     const deleteEmployee = async (id, e)=>{
         e.stopPropagation();
@@ -19,7 +19,7 @@ const Employee = ({id, timestamp, name, email, telepon, jabatan}) => {
     }
       
     return (
-        <ListItem
+        <ListItem onClick={() => setEmployee({id, name, email, telepon, jabatan, timestamp})}
             sx={{ mt: 3, boxShadow: 3 }}
             style={{backgroundColor:'#FAFAFA'}}
             secondaryAction={

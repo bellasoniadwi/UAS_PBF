@@ -8,7 +8,7 @@ import { TransactionContext } from "./TransactionContext";
 
 const Transaction = ({id, timestamp, name, total, product}) => {
 
-    const {showAlert} = useContext(TransactionContext);
+    const {showAlert,setTransaction} = useContext(TransactionContext);
     // fungsi delete
     const deleteTransaction = async (id, e)=>{
         e.stopPropagation();
@@ -19,7 +19,7 @@ const Transaction = ({id, timestamp, name, total, product}) => {
     }
       
     return (
-        <ListItem
+        <ListItem onClick={() => setTransaction({id, name, total, product, timestamp})}
             sx={{ mt: 3, boxShadow: 3 }}
             style={{backgroundColor:'#FAFAFA'}}
             secondaryAction={

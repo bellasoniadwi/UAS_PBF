@@ -9,6 +9,7 @@ import { ProductContext } from './ProductContext';
 
 const ProductDemo = () => {
     const [products, setProducts] = useState([])
+    const [product, setProduct] = useState({ name:'', harga:'', kategori:'' });
 
     // snackbar
     const [open, setOpen] = useState(false)
@@ -41,7 +42,7 @@ const ProductDemo = () => {
     }, [])
 
     return (
-        <ProductContext.Provider value={{ showAlert }}>
+        <ProductContext.Provider value={{ showAlert, product, setProduct }}>
             <Container maxWidth="sm">
                 <ProductForm/>
                 <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>

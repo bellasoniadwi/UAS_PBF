@@ -8,7 +8,7 @@ import { MemberContext } from "./MemberContext";
 
 const Member = ({id, timestamp, name, alamat, telepon, usia}) => {
     
-    const {showAlert} = useContext(MemberContext);
+    const {showAlert, setMember} = useContext(MemberContext);
     // fungsi delete
     const deleteMember = async (id, e)=>{
         e.stopPropagation();
@@ -19,7 +19,7 @@ const Member = ({id, timestamp, name, alamat, telepon, usia}) => {
     }
 
     return (
-        <ListItem
+        <ListItem onClick={() => setMember({id, name, alamat, telepon, usia, timestamp})}
             sx={{ mt: 3, boxShadow: 3 }}
             style={{backgroundColor:'#FAFAFA'}}
             secondaryAction={

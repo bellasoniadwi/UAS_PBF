@@ -9,6 +9,7 @@ import { TransactionContext } from './TransactionContext';
 
 const TransactionDemo = () => {
     const [transactions, setTransactions] = useState([])
+    const [transaction, setTransaction] = useState({ name:'', total:'', product:'' });
 
     // snackbar
     const [open, setOpen] = useState(false)
@@ -41,7 +42,7 @@ const TransactionDemo = () => {
     }, [])
     
     return (
-        <TransactionContext.Provider value={{ showAlert }}>
+        <TransactionContext.Provider value={{ showAlert, transaction, setTransaction }}>
         <Container maxWidth="sm">
             <TransactionForm/>
             <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>

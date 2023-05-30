@@ -8,7 +8,7 @@ import { ProductContext } from "./ProductContext";
 
 const Product = ({id, timestamp, name, harga, kategori}) => {
     
-    const {showAlert} = useContext(ProductContext);
+    const {showAlert, setProduct} = useContext(ProductContext);
     // fungsi delete
     const deleteProduct = async (id, e)=>{
         e.stopPropagation();
@@ -19,7 +19,7 @@ const Product = ({id, timestamp, name, harga, kategori}) => {
     }
 
     return (
-        <ListItem
+        <ListItem onClick={() => setProduct({id, name, harga, kategori, timestamp})}
             sx={{ mt: 3, boxShadow: 3 }}
             style={{backgroundColor:'#FAFAFA'}}
             secondaryAction={

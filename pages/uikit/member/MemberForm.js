@@ -1,24 +1,52 @@
 import { Button, TextField } from "@mui/material"
-import { addDoc, collection, serverTimestamp } from "@firebase/firestore"
-import { useContext, useState } from "react"
+import { addDoc, collection, serverTimestamp, updateDoc, doc } from "@firebase/firestore"
+import { useContext, useState, useRef, useEffect } from "react"
 import { db } from "../../../firebase"
 import { MemberContext } from "./MemberContext"
 
 const MemberForm = () => {
-    const [member, setMember] = useState({ name:'', alamat:'', telepon:'', usia:0 })
+
     // snackbar
-    const { showAlert } = useContext(MemberContext);
+    const { showAlert, member, setMember } = useContext(MemberContext);
+
     // button submit
     const onSubmit = async () => {
-        const collectionRef = collection(db, "members")
-        const docRef = await addDoc(collectionRef, { ...member, timestamp:serverTimestamp() })
-        setMember({ name:'', alamat:'', usia:0, telepon:'' })
-        showAlert('success', `Member with id ${docRef.id} is added succesfully`)
-       
+
+        //kondisi updates
+        if(member?.hasOwnProperty('timestamp')){
+            // lakukan update
+            const docRef = doc(db, "members", member.id)
+            const memberUpdated = {...member, timestamp:serverTimestamp()}
+            updateDoc(docRef, memberUpdated)
+            setMember({ name:'', alamat:'', usia:0, telepon:'' })
+            showAlert('success', `Member with id ${docRef.id} is updated succesfully`)
+        } else {
+            const collectionRef = collection(db, "members")
+            const docRef = await addDoc(collectionRef, { ...member, timestamp:serverTimestamp() })
+            setMember({ name:'', alamat:'', usia:0, telepon:'' })
+            showAlert('success', `Member with id ${docRef.id} is added succesfully`)
+        }
     }
+
+    // detect input area
+    const inputAreaRef = useRef();
+    useEffect(() => {
+        const checkIfClickedOutside = e => {
+            if(!inputAreaRef.current.contains(e.target)){
+                console.log('Outside input area');
+                setMember({ name:'', alamat:'', usia:0, telepon:'' })
+            } else {
+                console.log('Inside input area');
+            }
+        }
+        document.addEventListener("mousedown", checkIfClickedOutside)
+        return () => {
+            document.removeEventListener("mousedown", checkIfClickedOutside)
+        }
+    }, [])
     
     return (
-        <div>
+        <div ref={inputAreaRef}>
             <TextField fullWidth label="Name" margin="normal"
             value={member.name} onChange={e => setMember({...member, name:e.target.value})}
             />
@@ -31,7 +59,7 @@ const MemberForm = () => {
             <TextField fullWidth label="Usia" margin="normal"
             value={member.usia} onChange={e => setMember({...member, usia:e.target.value})}
             />
-            <Button onClick={onSubmit} variant="contained" sx={{ mt: 3 }}>Add a New Member</Button>
+            <Button onClick={onSubmit} variant="contained" sx={{ mt: 3 }}>{member.hasOwnProperty('timestamp')?'Update Member':'Add a new Member'}</Button>
         </div>
     )
 }

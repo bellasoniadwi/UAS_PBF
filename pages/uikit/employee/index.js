@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { db } from '../../../firebase';
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
-import Employee from './employee';
+import Employee from './Employee';
 import { Alert, Container, Snackbar } from '@mui/material';
 import EmployeeForm from './EmployeeForm';
 import { EmployeeContext } from './EmployeeContext';
@@ -9,6 +9,7 @@ import { EmployeeContext } from './EmployeeContext';
 
 const EmployeeDemo = () => {
     const [employees, setEmployees] = useState([])
+    const [employee, setEmployee] = useState({ name:'', email:'', telepon:'', jabatan:'' });
 
     // snackbar
     const [open, setOpen] = useState(false)
@@ -41,7 +42,7 @@ const EmployeeDemo = () => {
     }, [])
 
     return (
-        <EmployeeContext.Provider value={{ showAlert }}>
+        <EmployeeContext.Provider value={{ showAlert, employee, setEmployee }}>
             <Container maxWidth="sm">
                 <EmployeeForm/>
                 <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
