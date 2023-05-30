@@ -4,10 +4,30 @@ import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import Product from './Product';
 import { Alert, Container, Snackbar } from '@mui/material';
 import ProductForm from './ProductForm';
+import { ProductContext } from './ProductContext';
 
 
 const ProductDemo = () => {
     const [products, setProducts] = useState([])
+
+    // snackbar
+    const [open, setOpen] = useState(false)
+    const [alertType, setAlertType] = useState("success")
+    const [alertMessage, setAlertMessage] = useState("")
+    const showAlert = (type, msg) => {
+        setAlertType(type);
+        setAlertMessage(msg);
+        setOpen(true);
+    }
+    const handleClose = (event, reason) => {
+        if(reason === 'clickaway'){
+            return;
+        }
+        setOpen(false);
+    };
+
+
+    // create - firebase
     useEffect(() => {
         const collectionRef = collection(db, "products")
 
@@ -19,17 +39,25 @@ const ProductDemo = () => {
         return unsubscribe;
 
     }, [])
+
     return (
-        <Container maxWidth="sm">
-            <ProductForm/>
-            {products.map(products =>
-                <Product key={products.id}
-                    name={products.name}
-                    kategori={products.kategori}
-                    harga={products.harga}
-                />
-            )}
-        </Container>
+        <ProductContext.Provider value={{ showAlert }}>
+            <Container maxWidth="sm">
+                <ProductForm/>
+                <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity={alertType} sx={{ width: '100%' }}>
+                    {alertMessage}
+                </Alert>
+                </Snackbar>
+                {products.map(products =>
+                    <Product key={products.id}
+                        name={products.name}
+                        kategori={products.kategori}
+                        harga={products.harga}
+                    />
+                )}
+            </Container>
+        </ProductContext.Provider>
     );
 };
 

@@ -1,17 +1,22 @@
 import { Button, TextField } from "@mui/material"
 import { addDoc, collection, serverTimestamp } from "@firebase/firestore"
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { db } from "../../../firebase"
+import { MemberContext } from "./MemberContext"
 
 const MemberForm = () => {
     const [member, setMember] = useState({ name:'', alamat:'', telepon:'', usia:0 })
+    // snackbar
+    const { showAlert } = useContext(MemberContext);
+    // button submit
     const onSubmit = async () => {
         const collectionRef = collection(db, "members")
         const docRef = await addDoc(collectionRef, { ...member, timestamp:serverTimestamp() })
         setMember({ name:'', alamat:'', usia:0, telepon:'' })
-        alert(`Member with id ${docRef.id} is added succesfully`)
+        showAlert('success', `Member with id ${docRef.id} is added succesfully`)
        
     }
+    
     return (
         <div>
             <TextField fullWidth label="Name" margin="normal"

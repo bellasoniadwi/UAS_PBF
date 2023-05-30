@@ -4,10 +4,30 @@ import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import Transaction from './Transaction';
 import { Alert, Container, Snackbar } from '@mui/material';
 import TransactionForm from './TransactionForm';
+import { TransactionContext } from './TransactionContext';
 
 
 const TransactionDemo = () => {
     const [transactions, setTransactions] = useState([])
+
+    // snackbar
+    const [open, setOpen] = useState(false)
+    const [alertType, setAlertType] = useState("success")
+    const [alertMessage, setAlertMessage] = useState("")
+    const showAlert = (type, msg) => {
+        setAlertType(type);
+        setAlertMessage(msg);
+        setOpen(true);
+    }
+    const handleClose = (event, reason) => {
+        if(reason === 'clickaway'){
+            return;
+        }
+        setOpen(false);
+    };
+
+
+    // create - firebase
     useEffect(() => {
         const collectionRef = collection(db, "transactions")
 
@@ -19,9 +39,16 @@ const TransactionDemo = () => {
         return unsubscribe;
 
     }, [])
+    
     return (
+        <TransactionContext.Provider value={{ showAlert }}>
         <Container maxWidth="sm">
             <TransactionForm/>
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity={alertType} sx={{ width: '100%' }}>
+                    {alertMessage}
+                </Alert>
+            </Snackbar>
             {transactions.map(transactions =>
                 <Transaction key={transactions.id}
                     name={transactions.name}
@@ -30,6 +57,7 @@ const TransactionDemo = () => {
                 />
             )}
         </Container>
+        </TransactionContext.Provider>
     );
 };
 

@@ -1,15 +1,19 @@
 import { Button, TextField } from "@mui/material"
 import { addDoc, collection, serverTimestamp } from "@firebase/firestore"
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { db } from "../../../firebase"
+import { ProductContext } from './ProductContext';
 
 const ProductForm = () => {
     const [product, setProduct] = useState({ name:'', harga:0, kategori:'' })
+    // snackbar
+    const { showAlert } = useContext(ProductContext);
+    // button submit
     const onSubmit = async () => {
         const collectionRef = collection(db, "products")
         const docRef = await addDoc(collectionRef, { ...product, timestamp:serverTimestamp() })
         setProduct({ name:'', harga:0, kategori:'' })
-        alert(`Product with id ${docRef.id} is added succesfully`)
+        showAlert('success',`Product with id ${docRef.id} is added succesfully`)
        
     }
     return (

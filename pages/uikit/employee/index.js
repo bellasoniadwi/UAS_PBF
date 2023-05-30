@@ -4,10 +4,30 @@ import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import Employee from './employee';
 import { Alert, Container, Snackbar } from '@mui/material';
 import EmployeeForm from './EmployeeForm';
+import { EmployeeContext } from './EmployeeContext';
 
 
 const EmployeeDemo = () => {
     const [employees, setEmployees] = useState([])
+
+    // snackbar
+    const [open, setOpen] = useState(false)
+    const [alertType, setAlertType] = useState("success")
+    const [alertMessage, setAlertMessage] = useState("")
+    const showAlert = (type, msg) => {
+        setAlertType(type);
+        setAlertMessage(msg);
+        setOpen(true);
+    }
+    const handleClose = (event, reason) => {
+        if(reason === 'clickaway'){
+            return;
+        }
+        setOpen(false);
+    };
+
+
+    // create - firebase
     useEffect(() => {
         const collectionRef = collection(db, "employees")
 
@@ -19,18 +39,26 @@ const EmployeeDemo = () => {
         return unsubscribe;
 
     }, [])
+
     return (
-        <Container maxWidth="sm">
-            <EmployeeForm/>
-            {employees.map(employee =>
-                <Employee key={employee.id}
-                    name={employee.name}
-                    email={employee.email}
-                    jabatan={employee.jabatan}
-                    telepon={employee.telepon}
-                />
-            )}
-        </Container>
+        <EmployeeContext.Provider value={{ showAlert }}>
+            <Container maxWidth="sm">
+                <EmployeeForm/>
+                <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity={alertType} sx={{ width: '100%' }}>
+                    {alertMessage}
+                </Alert>
+                </Snackbar>
+                {employees.map(employee =>
+                    <Employee key={employee.id}
+                        name={employee.name}
+                        email={employee.email}
+                        jabatan={employee.jabatan}
+                        telepon={employee.telepon}
+                    />
+                )}
+            </Container>
+        </EmployeeContext.Provider>
     );
 };
 

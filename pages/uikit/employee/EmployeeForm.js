@@ -1,15 +1,19 @@
 import { Button, TextField } from "@mui/material"
 import { addDoc, collection, serverTimestamp } from "@firebase/firestore"
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { db } from "../../../firebase"
+import { EmployeeContext } from "./EmployeeContext"
 
 const EmployeeForm = () => {
-    const [employee, setEmployee] = useState({ name:'', email:'', telepon:'', jabatan:'' })
+    const [employee, setEmployee] = useState({ name:'', email:'', telepon:'', jabatan:'' });
+    // snackbar
+    const { showAlert } = useContext(EmployeeContext);
+    // button submit
     const onSubmit = async () => {
         const collectionRef = collection(db, "employees")
         const docRef = await addDoc(collectionRef, { ...employee, timestamp:serverTimestamp() })
         setEmployee({ name:'', email:'', jabatan:'', telepon:'' })
-        alert(`Employee with id ${docRef.id} is added succesfully`)
+        showAlert('success', `Employee with id ${docRef.id} is added succesfully`)
        
     }
     return (
