@@ -51,6 +51,7 @@ const EmployeeDemo = () => {
                 </Snackbar>
                 {employees.map(employee =>
                     <Employee key={employee.id}
+                        id={employee.id}
                         name={employee.name}
                         email={employee.email}
                         jabatan={employee.jabatan}

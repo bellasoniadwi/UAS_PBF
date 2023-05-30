@@ -51,6 +51,7 @@ const TransactionDemo = () => {
             </Snackbar>
             {transactions.map(transactions =>
                 <Transaction key={transactions.id}
+                    id={transactions.id}
                     name={transactions.name}
                     product={transactions.product}
                     total={transactions.total}

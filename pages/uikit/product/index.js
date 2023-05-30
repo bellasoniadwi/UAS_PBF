@@ -51,6 +51,7 @@ const ProductDemo = () => {
                 </Snackbar>
                 {products.map(products =>
                     <Product key={products.id}
+                        id={products.id}
                         name={products.name}
                         kategori={products.kategori}
                         harga={products.harga}

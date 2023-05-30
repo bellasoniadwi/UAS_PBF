@@ -51,6 +51,7 @@ const MemberDemo = () => {
                 </Snackbar>
                 {members.map(members =>
                     <Member key={members.id}
+                        id={members.id}
                         name={members.name}
                         alamat={members.alamat}
                         usia={members.usia}
