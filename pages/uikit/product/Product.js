@@ -1,14 +1,22 @@
 import { IconButton, ListItem, ListItemText } from "@mui/material"
 import DeleteIcon from '@mui/icons-material/Delete';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { deleteDoc, doc } from "firebase/firestore";
 import { db } from "../../../firebase";
 import { useContext } from "react";
 import { ProductContext } from "./ProductContext";
+import { useRouter } from "next/router";
 
 const Product = ({id, timestamp, name, harga, kategori}) => {
     
     const {showAlert, setProduct} = useContext(ProductContext);
+    // menuju detail
+    const router = useRouter();
+    //fungsi link to detail
+    const seeMore = (id, e) => {
+        e.stopPropagation();
+        router.push(`/pages/detail/products/${id}`)
+    }
     // fungsi delete
     const deleteProduct = async (id, e)=>{
         e.stopPropagation();
@@ -27,8 +35,8 @@ const Product = ({id, timestamp, name, harga, kategori}) => {
                     <IconButton onClick={e => deleteProduct(id, e)}>
                         <DeleteIcon/>
                     </IconButton>
-                    <IconButton>
-                        <MoreVertIcon/>
+                    <IconButton onClick={e => seeMore(id, e)}>
+                        <RemoveRedEyeIcon/>
                     </IconButton>
                 </>
             }

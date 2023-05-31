@@ -1,14 +1,17 @@
 import { IconButton, ListItem, ListItemText } from "@mui/material"
 import DeleteIcon from '@mui/icons-material/Delete';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { deleteDoc, doc } from "firebase/firestore";
 import { db } from "../../../firebase";
 import { useContext } from "react";
 import { EmployeeContext } from "./EmployeeContext";
+import { useRouter } from "next/router";
 
 const Employee = ({id, timestamp, name, email, telepon, jabatan}) => {
 
     const {showAlert, setEmployee} = useContext(EmployeeContext);
+    // menuju detail
+    const router = useRouter();
     // fungsi delete
     const deleteEmployee = async (id, e)=>{
         e.stopPropagation();
@@ -16,6 +19,11 @@ const Employee = ({id, timestamp, name, email, telepon, jabatan}) => {
         await deleteDoc(docRef);
         showAlert('error', `Employee with id ${id} deleted successffully`);
 
+    }
+    //fungsi link to detail
+    const seeMore = (id, e) => {
+        e.stopPropagation();
+        router.push(`/pages/detail/employees/${id}`)
     }
       
     return (
@@ -27,8 +35,8 @@ const Employee = ({id, timestamp, name, email, telepon, jabatan}) => {
                     <IconButton onClick={e => deleteEmployee(id, e)}>
                         <DeleteIcon/>
                     </IconButton>
-                    <IconButton>
-                        <MoreVertIcon/>
+                    <IconButton onClick={e => seeMore(id, e)}>
+                        <RemoveRedEyeIcon/>
                     </IconButton>
                 </>
             }
