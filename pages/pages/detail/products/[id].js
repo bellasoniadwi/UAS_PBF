@@ -1,6 +1,7 @@
-import { Grid } from "@mui/material";
+import { Button, Card, CardActions, CardContent, Grid, Typography } from "@mui/material";
 import { collection, doc, getDocs,getDoc} from "firebase/firestore";
 import { db } from "../../../../firebase";
+import Link from "next/link";
 
 const Detail = ({productProps}) => {
   const product = JSON.parse(productProps)
@@ -13,7 +14,26 @@ const Detail = ({productProps}) => {
       justifyContent="center"
       style={{ minHeight: "100vh" }}
     >
-        {product.name}: {product.harga}: {product.kategori}
+        <Grid item x5={1}>
+          <Card sx={{minWidth:1000, boxShadow:3, minHeight:500}} style={{backgroundColor:'#FAFAFA'}}>
+          <CardContent>
+            <Typography variant="h5" component="div">
+              {product.name}
+            </Typography>
+            <Typography sx={{mb:1.5}} color="text.secondary">
+              {product.kategori}
+            </Typography>
+            <Typography sx={{mb:1.5}} color="text.secondary">
+              {product.harga}
+            </Typography>
+          </CardContent>
+          <CardActions>
+            <Link href="/uikit/product">
+              <Button size="small">Back to List</Button>
+            </Link>
+          </CardActions>
+          </Card>
+        </Grid>
         
     </Grid>
   );

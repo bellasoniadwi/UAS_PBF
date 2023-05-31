@@ -1,6 +1,8 @@
-import { Grid } from "@mui/material";
+import { Button, Card, CardActions, CardContent, Grid, Typography } from "@mui/material";
 import { collection, doc, getDocs,getDoc} from "firebase/firestore";
 import { db } from "../../../../firebase";
+import Link from "next/link";
+
 
 const Detail = ({employeeProps}) => {
   const employee = JSON.parse(employeeProps)
@@ -13,8 +15,29 @@ const Detail = ({employeeProps}) => {
       justifyContent="center"
       style={{ minHeight: "100vh" }}
     >
-        {employee.name}: {employee.jabatan}: {employee.email}: {employee.telepon}
-        
+        <Grid item x5={1}>
+          <Card sx={{minWidth:1000, boxShadow:3, minHeight:500}} style={{backgroundColor:'#FAFAFA'}}>
+          <CardContent>
+            <Typography variant="h5" component="div">
+              {employee.name}
+            </Typography>
+            <Typography sx={{mb:1.5}} color="text.secondary">
+              {employee.email}
+            </Typography>
+            <Typography sx={{mb:1.5}} color="text.secondary">
+              {employee.telepon}
+            </Typography>
+            <Typography sx={{mb:1.5}} color="text.secondary">
+              {employee.jabatan}
+            </Typography>
+          </CardContent>
+          <CardActions>
+            <Link href="/uikit/employee">
+              <Button size="small">Back to List</Button>
+            </Link>
+          </CardActions>
+          </Card>
+        </Grid> 
     </Grid>
   );
 };
