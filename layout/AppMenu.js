@@ -9,7 +9,7 @@ const AppMenu = () => {
     const model = [
         {
             label: 'Home',
-            items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/uikit/charts' }]
+            items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/' }]
         },
         {
             label: 'Data Master',
