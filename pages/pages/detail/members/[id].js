@@ -1,44 +1,33 @@
-import { Button, Card, CardActions, CardContent, Grid, Typography } from "@mui/material";
-import { collection, doc, getDocs,getDoc} from "firebase/firestore";
+import {
+  Button
+} from "@mui/material";
+import { collection, doc, getDocs, getDoc } from "firebase/firestore";
 import { db } from "../../../../firebase";
-import Link from "next/link";
-
+import { Accordion, AccordionTab } from "primereact/accordion";
 
 const Detail = ({memberProps}) => {
   const member = JSON.parse(memberProps)
   return (
-    <Grid
-      container
-      spacing={0}
-      direction="column"
-      alignItems="center"
-      justifyContent="center"
-      style={{ minHeight: "100vh" }}
-    >
-        <Grid item x5={1}>
-          <Card sx={{minWidth:1000, boxShadow:3, minHeight:500}} style={{backgroundColor:'#FAFAFA'}}>
-          <CardContent>
-            <Typography variant="h5" component="div">
-              {member.name}
-            </Typography>
-            <Typography sx={{mb:1.5}} color="text.secondary">
-              {member.alamat}
-            </Typography>
-            <Typography sx={{mb:1.5}} color="text.secondary">
-              {member.telepon}
-            </Typography>
-            <Typography sx={{mb:1.5}} color="text.secondary">
-              {member.usia}
-            </Typography>
-          </CardContent>
-          <CardActions>
-            <Link href="/uikit/member">
-              <Button size="small">Back to List</Button>
-            </Link>
-          </CardActions>
-          </Card>
-        </Grid>
-    </Grid>
+    <div className="col-12 md:col-12">
+      <div className="card">
+        <h5>Data Member</h5>
+        <Accordion activeIndex={0}>
+          <AccordionTab header="Nama">
+            <p>{member.name}</p>
+          </AccordionTab>
+          <AccordionTab header="Alamat">
+            <p>{member.alamat}</p>
+          </AccordionTab>
+          <AccordionTab header="Telepon">
+            <p>{member.telepon}</p>
+          </AccordionTab>
+          <AccordionTab header="Usia">
+            <p>{member.usia} tahun</p>
+          </AccordionTab>
+        </Accordion>
+      </div>
+        <Button href="/uikit/member">Back to List</Button>
+    </div>
   );
 };
 

@@ -1,71 +1,59 @@
-import { Button, Card, CardActions, CardContent, Grid, Typography } from "@mui/material";
-import { collection, doc, getDocs,getDoc} from "firebase/firestore";
+import {
+  Button
+} from "@mui/material";
+import { collection, doc, getDocs, getDoc } from "firebase/firestore";
 import { db } from "../../../../firebase";
-import Link from "next/link";
+import { Accordion, AccordionTab } from "primereact/accordion";
 
-
-const Detail = ({employeeProps}) => {
-  const employee = JSON.parse(employeeProps)
+const Detail = ({ employeeProps }) => {
+  const employee = JSON.parse(employeeProps);
   return (
-    <Grid
-      container
-      spacing={0}
-      direction="column"
-      alignItems="center"
-      justifyContent="center"
-      style={{ minHeight: "100vh" }}
-    >
-        <Grid item x5={1}>
-          <Card sx={{minWidth:1000, boxShadow:3, minHeight:500}} style={{backgroundColor:'#FAFAFA'}}>
-          <CardContent>
-            <Typography variant="h5" component="div">
-              {employee.name}
-            </Typography>
-            <Typography sx={{mb:1.5}} color="text.secondary">
-              {employee.email}
-            </Typography>
-            <Typography sx={{mb:1.5}} color="text.secondary">
-              {employee.telepon}
-            </Typography>
-            <Typography sx={{mb:1.5}} color="text.secondary">
-              {employee.jabatan}
-            </Typography>
-          </CardContent>
-          <CardActions>
-            <Link href="/uikit/employee">
-              <Button size="small">Back to List</Button>
-            </Link>
-          </CardActions>
-          </Card>
-        </Grid> 
-    </Grid>
+    <div className="col-12 md:col-12">
+      <div className="card">
+        <h5>Data Employee</h5>
+        <Accordion activeIndex={0}>
+          <AccordionTab header="Nama">
+            <p>{employee.name}</p>
+          </AccordionTab>
+          <AccordionTab header="Email">
+            <p>{employee.email}</p>
+          </AccordionTab>
+          <AccordionTab header="Telepon">
+            <p>{employee.telepon}</p>
+          </AccordionTab>
+          <AccordionTab header="Jabatan">
+            <p>{employee.jabatan}</p>
+          </AccordionTab>
+        </Accordion>
+      </div>
+        <Button href="/uikit/employee">Back to List</Button>
+    </div>
   );
 };
 
 export default Detail;
 
 export const getStaticPaths = async () => {
-  const snapshot = await getDocs(collection(db, 'employees'));
-  const paths = snapshot.docs.map(doc => {
-    return{
-      params: {id: doc.id.toString()}
-    }
-  })
+  const snapshot = await getDocs(collection(db, "employees"));
+  const paths = snapshot.docs.map((doc) => {
+    return {
+      params: { id: doc.id.toString() },
+    };
+  });
 
-  return{
+  return {
     paths,
-    fallback: false
-  }
-}
+    fallback: false,
+  };
+};
 
-export const getStaticProps = async(context) => {
+export const getStaticProps = async (context) => {
   const id = context.params.id;
 
-  const docRef = doc(db, "employees", id );
+  const docRef = doc(db, "employees", id);
   const docSnap = await getDoc(docRef);
 
   return {
-    props: {employeeProps: JSON.stringify(docSnap.data()) || null}
-  }
-}
- 
+    props: { employeeProps: JSON.stringify(docSnap.data()) || null },
+  };
+};

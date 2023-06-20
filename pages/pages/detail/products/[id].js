@@ -1,41 +1,30 @@
-import { Button, Card, CardActions, CardContent, Grid, Typography } from "@mui/material";
-import { collection, doc, getDocs,getDoc} from "firebase/firestore";
+import {
+  Button
+} from "@mui/material";
+import { collection, doc, getDocs, getDoc } from "firebase/firestore";
 import { db } from "../../../../firebase";
-import Link from "next/link";
+import { Accordion, AccordionTab } from "primereact/accordion";
 
 const Detail = ({productProps}) => {
   const product = JSON.parse(productProps)
   return (
-    <Grid
-      container
-      spacing={0}
-      direction="column"
-      alignItems="center"
-      justifyContent="center"
-      style={{ minHeight: "100vh" }}
-    >
-        <Grid item x5={1}>
-          <Card sx={{minWidth:1000, boxShadow:3, minHeight:500}} style={{backgroundColor:'#FAFAFA'}}>
-          <CardContent>
-            <Typography variant="h5" component="div">
-              {product.name}
-            </Typography>
-            <Typography sx={{mb:1.5}} color="text.secondary">
-              {product.kategori}
-            </Typography>
-            <Typography sx={{mb:1.5}} color="text.secondary">
-              {product.harga}
-            </Typography>
-          </CardContent>
-          <CardActions>
-            <Link href="/uikit/product">
-              <Button size="small">Back to List</Button>
-            </Link>
-          </CardActions>
-          </Card>
-        </Grid>
-        
-    </Grid>
+    <div className="col-12 md:col-12">
+      <div className="card">
+        <h5>Data Product</h5>
+        <Accordion activeIndex={0}>
+          <AccordionTab header="Nama Product">
+            <p>{product.name}</p>
+          </AccordionTab>
+          <AccordionTab header="Harga">
+            <p>Rp. {product.harga}</p>
+          </AccordionTab>
+          <AccordionTab header="Kategori">
+            <p>{product.kategori}</p>
+          </AccordionTab>
+        </Accordion>
+      </div>
+        <Button href="/uikit/member">Back to List</Button>
+    </div>
   );
 };
 
