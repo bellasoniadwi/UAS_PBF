@@ -23,7 +23,7 @@ const Detail = ({transactionProps}) => {
           </AccordionTab>
         </Accordion>
       </div>
-        <Button href="/uikit/member">Back to List</Button>
+        <Button href="/uikit/transaction">Back to List</Button>
     </div>
   );
 };

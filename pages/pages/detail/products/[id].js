@@ -23,7 +23,7 @@ const Detail = ({productProps}) => {
           </AccordionTab>
         </Accordion>
       </div>
-        <Button href="/uikit/member">Back to List</Button>
+        <Button href="/uikit/product">Back to List</Button>
     </div>
   );
 };
