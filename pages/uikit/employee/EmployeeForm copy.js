@@ -4,28 +4,29 @@ import {
   collection,
   serverTimestamp,
   updateDoc,
-  doc,
   getDocs,
+  doc,
 } from "@firebase/firestore";
 import { useContext, useEffect, useRef, useState } from "react";
 import { db } from "../../../firebase";
 import { EmployeeContext } from "./EmployeeContext";
 import axios from "../../../lib/axios";
+import { useRouter } from "next/router";
 
-export default function EmployeeForm() {
+const EmployeeForm = () => {
   // snackbar
   const { showAlert, employee, setEmployee } = useContext(EmployeeContext);
-
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [telepon, setTelepon] = useState("");
-  const [jabatan, setJabatan] = useState("");
-  const [fireData, setFireData] = useState([]);
-  const collectionRef = collection(db, "employees");
 
   useEffect(() => {
     getData();
   }, []);
+
+  const router = useRouter();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [telepon, setTelepon] = useState("");
+  const [jabatan, setJabatan] = useState("");
+  const [fireData, setFireData] = useState();
 
   // button submit
   const addData = (event) => {
@@ -39,43 +40,44 @@ export default function EmployeeForm() {
         "success",
         `Employee with id ${docRef.id} is updated succesfully`
       );
-      axios.put(
-        `${process.env.NEXT_PUBLIC_API_BACKEND}/api/employees/${timestamp}`,
-        {
-          ...employee,
-        }
-      );
     } else {
-      addDoc(
-        collectionRef,
-        {
-          ...employee,
-          timestamp: serverTimestamp(),
-        },
-        setEmployee({ name: "", email: "", jabatan: "", telepon: "" }),
-        showAlert("success", `Employee is added succesfully`)
-      ).then(() => {
+      const collectionRef = collection(db, "employees");
+      const docRef = addDoc(collectionRef, {
+        ...employee,
+        timestamp: serverTimestamp(),
+      },
+      setEmployee({ name: "", email: "", jabatan: "", telepon: "" }),
+        showAlert(
+          "success",
+          `Employee is added succesfully`
+        ))
+      .then(() => {
         axios
-          .post("http://localhost:8000/api/employees", {
-            ...employee,
-          })
-          .then((response) => {
-            showAlert("success", `Employee is succesfully added to MySQL`);
+        .post(`${process.env.NEXT_PUBLIC_API_BACKEND}/api/employees`, {
+            ...employee
+        })
+        .then((response) => {
+            alert("Berhasil Menambahkan Data");
             getData();
             setName("");
             setEmail("");
             setTelepon("");
             setJabatan("");
           })
-          .catch((err) => {
-            console.error(err);
-            showAlert("error", `Employee can't be added to MySQL`);
+          .catch((error) => {
+            console.log("error", error);
+            alert("Gagal menambahkan data ke MySQL");
           });
-      });
+      })
+      .catch((err) => {
+        console.error(err);
+        alert('Gagal menambahkan data');
+      });;
     }
   };
 
   const getData = async () => {
+    const collectionRef = collection(db, "employees");
     await getDocs(collectionRef).then((response) => {
       setFireData(
         response.docs.map((data) => {
@@ -104,7 +106,8 @@ export default function EmployeeForm() {
 
   return (
     <div ref={inputAreaRef}>
-      <form method="POST" onSubmit={addData}>
+      <form onSubmit={addData} method="POST">
+        {/* <pre>{JSON.stringify(employee, null, '\t')}</pre> */}
         <TextField
           fullWidth
           label="Name"
@@ -158,4 +161,6 @@ export default function EmployeeForm() {
       </form>
     </div>
   );
-}
+};
+
+export default EmployeeForm;

@@ -6,6 +6,7 @@ import { Alert, Container, Snackbar } from "@mui/material";
 import EmployeeForm from "./EmployeeForm";
 import { EmployeeContext } from "./EmployeeContext";
 import Grid from "@mui/material/Grid";
+import axios from "../../../lib/axios";
 
 const EmployeeDemo = () => {
   const [employees, setEmployees] = useState([]);
@@ -49,6 +50,22 @@ const EmployeeDemo = () => {
     });
     return unsubscribe;
   }, []);
+
+  // laravel
+  const [Datas, setDatas] = useState([])
+
+    useEffect(() => {
+        axios
+            .get(`${process.env.NEXT_PUBLIC_API_BACKEND}/api/employees`)
+            .then(function (response) {
+                setDatas(response.data.data)
+                console.log(Datas)
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
+    }, [Datas])
+    console.log('Data:', Datas)
 
   return (
     <div className="grid p-fluid">

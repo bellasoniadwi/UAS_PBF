@@ -17,7 +17,7 @@ const Employee = ({id, timestamp, name, email, telepon, jabatan}) => {
         e.stopPropagation();
         const docRef = doc(db, "employees", id);
         await deleteDoc(docRef);
-        showAlert('error', `Employee with id ${id} deleted successffully`);
+        showAlert('success', `Employee with id ${id} deleted successffully`);
 
     }
     //fungsi link to detail
