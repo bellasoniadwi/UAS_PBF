@@ -4,7 +4,7 @@ import {
   collection,
   serverTimestamp,
   updateDoc,
-  doc
+  doc,
 } from "@firebase/firestore";
 import { useContext, useEffect, useRef, useState } from "react";
 import { db } from "../../../firebase";
@@ -14,27 +14,54 @@ import axios from "../../../lib/axios";
 export default function EmployeeForm() {
   // snackbar
   const { showAlert, employee, setEmployee } = useContext(EmployeeContext);
-
+  const [id, setID] = useState(null);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [telepon, setTelepon] = useState('');
+  const [jabatan, setJabatan] = useState('');
   const collectionRef = collection(db, "employees");
 
+  const getID = (id, name, email, telepon, jabatan) => {
+    setID(id)
+    setName(name);
+    setEmail(email);
+    setTelepon(telepon);
+    setJabatan(jabatan);
+  }
+  
   // button submit
   const addData = (event) => {
     event.preventDefault();
+
     if (employee?.hasOwnProperty("timestamp")) {
       const docRef = doc(db, "employees", employee.id);
       const employeeUpdated = { ...employee, timestamp: serverTimestamp() };
-      updateDoc(docRef, employeeUpdated);
-      setEmployee({ name: "", email: "", jabatan: "", telepon: "" });
-      showAlert(
-        "success",
-        `Employee with id ${docRef.id} is updated succesfully`
-      );
-      axios.put(
-        `${process.env.NEXT_PUBLIC_API_BACKEND}/api/employees/${timestamp}`,
-        {
-          ...employee,
-        }
-      );
+      
+      getID(employee.id, employee.name, employee.email, employee.telepon, employee.jabatan)
+      
+      updateDoc(
+        docRef,
+        employeeUpdated,
+        setEmployee({ name: "", email: "", jabatan: "", telepon: "" }),
+        showAlert(
+          "success",
+          `Employee with id ${docRef.id} is updated succesfully`
+        )
+      ).then(() => {
+        
+        axios
+          .put(`http://localhost:8000/api/employees/${name}`, {
+            ...employee
+            
+          })
+          .then((response) => {
+            showAlert("success", `Employee is succesfully updated in MySQL`);
+          })
+          .catch((err) => {
+            console.error(err);
+            showAlert("error", `Employee can't be updated in MySQL`);
+          });
+      });
     } else {
       addDoc(
         collectionRef,
@@ -59,6 +86,8 @@ export default function EmployeeForm() {
       });
     }
   };
+
+  
 
   // detect input area
   const inputAreaRef = useRef();
