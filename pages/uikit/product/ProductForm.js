@@ -4,7 +4,7 @@ import {
   collection,
   serverTimestamp,
   updateDoc,
-  doc
+  doc,
 } from "@firebase/firestore";
 import { useContext, useEffect, useRef, useState } from "react";
 import { db } from "../../../firebase";
@@ -14,27 +14,54 @@ import axios from "../../../lib/axios";
 export default function ProductForm() {
   // snackbar
   const { showAlert, product, setProduct } = useContext(ProductContext);
+  const [id, setID] = useState(null);
+  const [name, setName] = useState("");
+  const [harga, setHarga] = useState("");
+  const [kategori, setKategori] = useState("");
 
   const collectionRef = collection(db, "products");
+
+  const getID = (id, name, harga, kategori) => {
+    setID(id);
+    setName(name);
+    setHarga(harga);
+    setKategori(kategori);
+
+  };
 
   // button submit
   const addData = (event) => {
     event.preventDefault();
+
     if (product?.hasOwnProperty("timestamp")) {
       const docRef = doc(db, "products", product.id);
       const productUpdated = { ...product, timestamp: serverTimestamp() };
-      updateDoc(docRef, productUpdated);
-      setProduct({ name: "", harga: "", kategori: "" });
-      showAlert(
-        "success",
-        `Product with id ${docRef.id} is updated succesfully`
-      );
-      axios.put(
-        `${process.env.NEXT_PUBLIC_API_BACKEND}/api/products/${timestamp}`,
-        {
-          ...product,
-        }
-      );
+
+      getID(product.id, product.name, product.harga, product.kategori);
+
+      updateDoc(
+        docRef,
+        productUpdated,
+        setProduct({ name: "", harga: "", kategori: "" }),
+        showAlert(
+          "success",
+          `Product with id ${docRef.id} is updated succesfully`
+        )
+      ).then(() => {
+
+        axios
+          .put(`http://localhost:8000/api/products/${name}`, {
+            ...product
+            
+          })
+          .then((response) => {
+            showAlert("success", `Product is succesfully updated in MySQL`);
+          })
+          .catch((err) => {
+            console.error(err);
+            showAlert("error", `Product can't be updated in MySQL`);
+          });
+      });
     } else {
       addDoc(
         collectionRef,

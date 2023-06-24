@@ -15,30 +15,55 @@ export default function TransactionForm() {
   // snackbar
   const { showAlert, transaction, setTransaction } =
     useContext(TransactionContext);
-
+  const [id, setID] = useState(null);
+  const [name, setName] = useState("");
+  const [product, setProduct] = useState("");
+  const [total, setTotal] = useState("");
   const collectionRef = collection(db, "transactions");
+
+  const getID = (id, name, product, total) => {
+    setID(id)
+    setName(name);
+    setProduct(product);
+    setTotal(total);
+  }
 
   // button submit
   const addData = (event) => {
     event.preventDefault();
+
     if (transaction?.hasOwnProperty("timestamp")) {
       const docRef = doc(db, "transactions", transaction.id);
       const transactionUpdated = {
         ...transaction,
         timestamp: serverTimestamp(),
       };
-      updateDoc(docRef, transactionUpdated);
-      setTransaction({ name: "", product: "", total: "" });
-      showAlert(
-        "success",
-        `Transaction with id ${docRef.id} is updated succesfully`
-      );
-      axios.put(
-        `${process.env.NEXT_PUBLIC_API_BACKEND}/api/transactions/${timestamp}`,
-        {
-          ...product,
-        }
-      );
+
+      getID(transaction.id, transaction.name, transaction.product, transaction.total);
+      
+      updateDoc(
+        docRef,
+        transactionUpdated,
+        setTransaction({ name: "", product: "", total: "" }),
+        showAlert(
+          "success",
+          `Transaction with id ${docRef.id} is updated succesfully`
+        )
+      ).then(() => {
+        
+        axios
+          .put(`http://localhost:8000/api/transactions/${name}`, {
+            ...transaction,
+
+          })
+          .then((response) => {
+            showAlert("success", `Transaction is succesfully updated in MySQL`);
+          })
+          .catch((err) => {
+            console.error(err);
+            showAlert("error", `Transaction can't be updated in MySQL`);
+          });
+      });
     } else {
       addDoc(
         collectionRef,
@@ -63,6 +88,8 @@ export default function TransactionForm() {
       });
     }
   };
+
+  
 
   // detect input area
   const inputAreaRef = useRef();
