@@ -6,6 +6,7 @@ import { Alert, Container, Snackbar } from "@mui/material";
 import ProductForm from "./ProductForm";
 import { ProductContext } from "./ProductContext";
 import Grid from "@mui/material/Grid";
+import axios from "../../../lib/axios";
 
 const ProductDemo = () => {
   const [products, setProducts] = useState([]);
@@ -44,6 +45,22 @@ const ProductDemo = () => {
     });
     return unsubscribe;
   }, []);
+
+  // laravel
+  const [Datas, setDatas] = useState([])
+
+    useEffect(() => {
+        axios
+            .get(`${process.env.NEXT_PUBLIC_API_BACKEND}/api/products`)
+            .then(function (response) {
+                setDatas(response.data.data)
+                console.log(Datas)
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
+    }, [Datas])
+    console.log('Data:', Datas)
 
   return (
     <div className="grid p-fluid">

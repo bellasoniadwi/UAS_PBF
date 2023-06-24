@@ -22,7 +22,7 @@ const Product = ({id, timestamp, name, harga, kategori}) => {
         e.stopPropagation();
         const docRef = doc(db, "products", id);
         await deleteDoc(docRef);
-        showAlert('error', `Product with id ${id} deleted successffully`);
+        showAlert('success', `Product with id ${id} deleted successffully`);
 
     }
 

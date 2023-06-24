@@ -22,7 +22,7 @@ const Transaction = ({id, timestamp, name, total, product}) => {
         e.stopPropagation();
         const docRef = doc(db, "transactions", id);
         await deleteDoc(docRef);
-        showAlert('error', `Transaction with id ${id} deleted successffully`);
+        showAlert('success', `Transaction with id ${id} deleted successffully`);
 
     }
       
