@@ -14,27 +14,54 @@ import axios from "../../../lib/axios";
 export default function MemberForm() {
   // snackbar
   const { showAlert, member, setMember } = useContext(MemberContext);
-
+  const [id, setID] = useState(null);
+  const [name, setName] = useState('');
+  const [alamat, setAlamat] = useState('');
+  const [telepon, setTelepon] = useState('');
+  const [usia, setUsia] = useState('');
   const collectionRef = collection(db, "members");
+
+  const getID = (id, name, alamat, telepon, usia) => {
+    setID(id)
+    setName(name);
+    setAlamat(alamat);
+    setTelepon(telepon);
+    setUsia(usia);
+  }
 
   // button submit
   const addData = (event) => {
     event.preventDefault();
+
     if (member?.hasOwnProperty("timestamp")) {
       const docRef = doc(db, "members", member.id);
       const memberUpdated = { ...member, timestamp: serverTimestamp() };
-      updateDoc(docRef, memberUpdated);
-      setMember({ name: "", alamat: "", usia: "", telepon: "" });
-      showAlert(
-        "success",
-        `Member with id ${docRef.id} is updated succesfully`
-      );
-      axios.put(
-        `${process.env.NEXT_PUBLIC_API_BACKEND}/api/members/${timestamp}`,
-        {
-          ...member,
-        }
-      );
+
+      getID(member.id, member.name, member.alamat, member.telepon, member.usia);
+
+      updateDoc(
+        docRef,
+        memberUpdated,
+        setMember({ name: "", alamat: "", telepon: "", usia: "" }),
+        showAlert(
+          "success",
+          `Member with id ${docRef.id} is updated succesfully`
+        )
+      ).then(() => {
+        
+        axios
+          .put(`http://localhost:8000/api/members/${name}`, {
+            ...member
+
+          })
+          .then((response) => {
+            showAlert("success", `Member is succesfully updated in MySQL`);
+          })
+          .catch((err) => {
+            console.error(err);
+            showAlert("error", `Member can't be updated in MySQL`);
+          });
+      });
     } else {
       addDoc(
         collectionRef,
@@ -59,6 +86,8 @@ export default function MemberForm() {
       });
     }
   };
+
+  
 
   // detect input area
   const inputAreaRef = useRef();
@@ -105,7 +134,9 @@ export default function MemberForm() {
           name="telepon"
           id="telepon"
           value={member.telepon}
-          onChange={(e) => setMember({ ...member, telepon: e.target.value })}
+          onChange={(e) => 
+            setMember({ ...member, telepon: e.target.value })
+          }
         />
         <TextField
           fullWidth
@@ -114,9 +145,16 @@ export default function MemberForm() {
           name="usia"
           id="usia"
           value={member.usia}
-          onChange={(e) => setMember({ ...member, usia: e.target.value })}
+          onChange={(e) => 
+            setMember({ ...member, usia: e.target.value })
+          }
         />
-        <Button onClick={addData} type="submit" variant="contained" sx={{ mt: 3 }}>
+        <Button 
+          onClick={addData} 
+          type="submit" 
+          variant="contained" 
+          sx={{ mt: 3 }}
+        >
           {member.hasOwnProperty("timestamp")
             ? "Update Member"
             : "Add a new Member"}
