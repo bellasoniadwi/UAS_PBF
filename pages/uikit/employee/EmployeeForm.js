@@ -4,8 +4,7 @@ import {
   collection,
   serverTimestamp,
   updateDoc,
-  doc,
-  getDocs,
+  doc
 } from "@firebase/firestore";
 import { useContext, useEffect, useRef, useState } from "react";
 import { db } from "../../../firebase";
@@ -16,16 +15,7 @@ export default function EmployeeForm() {
   // snackbar
   const { showAlert, employee, setEmployee } = useContext(EmployeeContext);
 
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [telepon, setTelepon] = useState("");
-  const [jabatan, setJabatan] = useState("");
-  const [fireData, setFireData] = useState([]);
   const collectionRef = collection(db, "employees");
-
-  useEffect(() => {
-    getData();
-  }, []);
 
   // button submit
   const addData = (event) => {
@@ -61,11 +51,6 @@ export default function EmployeeForm() {
           })
           .then((response) => {
             showAlert("success", `Employee is succesfully added to MySQL`);
-            getData();
-            setName("");
-            setEmail("");
-            setTelepon("");
-            setJabatan("");
           })
           .catch((err) => {
             console.error(err);
@@ -73,16 +58,6 @@ export default function EmployeeForm() {
           });
       });
     }
-  };
-
-  const getData = async () => {
-    await getDocs(collectionRef).then((response) => {
-      setFireData(
-        response.docs.map((data) => {
-          return { ...data.data(), id: data.id };
-        })
-      );
-    });
   };
 
   // detect input area

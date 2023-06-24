@@ -4,8 +4,7 @@ import {
   collection,
   serverTimestamp,
   updateDoc,
-  doc,
-  getDocs,
+  doc
 } from "@firebase/firestore";
 import { useContext, useEffect, useRef, useState } from "react";
 import { db } from "../../../firebase";
@@ -16,16 +15,7 @@ export default function MemberForm() {
   // snackbar
   const { showAlert, member, setMember } = useContext(MemberContext);
 
-  const [name, setName] = useState("");
-  const [alamat, setAlamat] = useState("");
-  const [telepon, setTelepon] = useState("");
-  const [usia, setUsia] = useState("");
-  const [fireData, setFireData] = useState([]);
   const collectionRef = collection(db, "members");
-
-  useEffect(() => {
-    getData();
-  }, []);
 
   // button submit
   const addData = (event) => {
@@ -61,11 +51,6 @@ export default function MemberForm() {
           })
           .then((response) => {
             showAlert("success", `Member is succesfully added to MySQL`);
-            getData();
-            setName("");
-            setAlamat("");
-            setTelepon("");
-            setUsia("");
           })
           .catch((err) => {
             console.error(err);
@@ -73,16 +58,6 @@ export default function MemberForm() {
           });
       });
     }
-  };
-
-  const getData = async () => {
-    await getDocs(collectionRef).then((response) => {
-      setFireData(
-        response.docs.map((data) => {
-          return { ...data.data(), id: data.id };
-        })
-      );
-    });
   };
 
   // detect input area

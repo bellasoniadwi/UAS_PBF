@@ -4,8 +4,7 @@ import {
   collection,
   serverTimestamp,
   updateDoc,
-  doc,
-  getDocs,
+  doc
 } from "@firebase/firestore";
 import { useContext, useEffect, useRef, useState } from "react";
 import { db } from "../../../firebase";
@@ -17,15 +16,7 @@ export default function TransactionForm() {
   const { showAlert, transaction, setTransaction } =
     useContext(TransactionContext);
 
-  const [name, setName] = useState("");
-  const [product, setProduct] = useState("");
-  const [total, setTotal] = useState("");
-  const [fireData, setFireData] = useState([]);
   const collectionRef = collection(db, "transactions");
-
-  useEffect(() => {
-    getData();
-  }, []);
 
   // button submit
   const addData = (event) => {
@@ -64,10 +55,6 @@ export default function TransactionForm() {
           })
           .then((response) => {
             showAlert("success", `Transaction is succesfully added to MySQL`);
-            getData();
-            setName("");
-            setProduct("");
-            setTotal("");
           })
           .catch((err) => {
             console.error(err);
@@ -75,16 +62,6 @@ export default function TransactionForm() {
           });
       });
     }
-  };
-
-  const getData = async () => {
-    await getDocs(collectionRef).then((response) => {
-      setFireData(
-        response.docs.map((data) => {
-          return { ...data.data(), id: data.id };
-        })
-      );
-    });
   };
 
   // detect input area

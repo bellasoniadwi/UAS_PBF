@@ -4,8 +4,7 @@ import {
   collection,
   serverTimestamp,
   updateDoc,
-  doc,
-  getDocs,
+  doc
 } from "@firebase/firestore";
 import { useContext, useEffect, useRef, useState } from "react";
 import { db } from "../../../firebase";
@@ -16,15 +15,7 @@ export default function ProductForm() {
   // snackbar
   const { showAlert, product, setProduct } = useContext(ProductContext);
 
-  const [name, setName] = useState("");
-  const [harga, setHarga] = useState("");
-  const [kategori, setKategori] = useState("");
-  const [fireData, setFireData] = useState([]);
   const collectionRef = collection(db, "products");
-
-  useEffect(() => {
-    getData();
-  }, []);
 
   // button submit
   const addData = (event) => {
@@ -60,10 +51,6 @@ export default function ProductForm() {
           })
           .then((response) => {
             showAlert("success", `Product is succesfully added to MySQL`);
-            getData();
-            setName("");
-            setHarga("");
-            setKategori("");
           })
           .catch((err) => {
             console.error(err);
@@ -71,16 +58,6 @@ export default function ProductForm() {
           });
       });
     }
-  };
-
-  const getData = async () => {
-    await getDocs(collectionRef).then((response) => {
-      setFireData(
-        response.docs.map((data) => {
-          return { ...data.data(), id: data.id };
-        })
-      );
-    });
   };
 
   // detect input area
