@@ -14,6 +14,7 @@
         "@mui/icons-material": "^5.11.16",
         "@mui/material": "^5.13.3",
         "@mui/styled-engine-sc": "^5.12.0",
+        "axios": "^0.25",
         "chart.js": "4.2.1",
         "eslint": "8.38.0",
         "eslint-config-next": "13.3.0",
