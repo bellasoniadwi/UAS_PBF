@@ -22,7 +22,7 @@ const Member = ({id, timestamp, name, alamat, telepon, usia}) => {
         e.stopPropagation();
         const docRef = doc(db, "members", id);
         await deleteDoc(docRef);
-        showAlert('error', `Member with id ${id} deleted successffully`);
+        showAlert('success', `Member with id ${id} deleted successffully`);
 
     }
 
