@@ -45,7 +45,7 @@ export default function MemberForm() {
         setMember({ name: "", alamat: "", telepon: "", usia: "" }),
         showAlert(
           "success",
-          `Member with id ${docRef.id} is updated succesfully`
+          `Member with id ${docRef.id} is succesfully updated in Firebase`
         )
       ).then(() => {
         
@@ -61,6 +61,10 @@ export default function MemberForm() {
             console.error(err);
             showAlert("error", `Member can't be updated in MySQL`);
           });
+      })
+      .catch((err) => {
+        console.error(err);
+        showAlert("error", `Member can't be updated in Firebase`);
       });
     } else {
       addDoc(
@@ -70,7 +74,7 @@ export default function MemberForm() {
           timestamp: serverTimestamp(),
         },
         setMember({ name: "", alamat: "", usia: "", telepon: "" }),
-        showAlert("success", `Member is added succesfully`)
+        showAlert("success", `Member is succesfully added to Firebase`)
       ).then(() => {
         axios
           .post("http://localhost:8000/api/members", {
@@ -83,6 +87,10 @@ export default function MemberForm() {
             console.error(err);
             showAlert("error", `Member can't be added to MySQL`);
           });
+      })
+      .catch((err) => {
+        console.error(err);
+        showAlert("error", `Member can't be added to Firebase`);
       });
     }
   };

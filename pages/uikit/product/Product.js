@@ -24,8 +24,9 @@ const Product = ({ id, timestamp, name, harga, kategori }) => {
   const deleteProduct = async (id, e) => {
     e.stopPropagation();
     const docRef = doc(db, "products", id);
-    deleteDoc(docRef).then(() => {
-      showAlert("success", `Product with id ${id} deleted successffully`);
+    deleteDoc(docRef, 
+      showAlert("success", `Product with id ${id} is succesfully deleted from Firebase`))
+      .then(() => {
       // Hapus data dari API Laravel
       axios
         .delete(`http://localhost:8000/api/products/${name}`)
@@ -38,6 +39,10 @@ const Product = ({ id, timestamp, name, harga, kategori }) => {
           console.error(error);
           showAlert("error", `Product can't be deleted from MySQL`);
         });
+      }).catch((error) => {
+        // Handling error
+        console.error(error);
+        showAlert("error", `Product can't be deleted from Firebase`);
     });
   };
 

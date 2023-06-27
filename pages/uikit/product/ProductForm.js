@@ -45,7 +45,7 @@ export default function ProductForm() {
         setProduct({ name: "", harga: "", kategori: "" }),
         showAlert(
           "success",
-          `Product with id ${docRef.id} is updated succesfully`
+          `Product with id ${docRef.id} is succesfully updated in Firebase`
         )
       ).then(() => {
 
@@ -61,6 +61,10 @@ export default function ProductForm() {
             console.error(err);
             showAlert("error", `Product can't be updated in MySQL`);
           });
+      })
+      .catch((err) => {
+        console.error(err);
+        showAlert("error", `Product can't be updated in Firebase`);
       });
     } else {
       addDoc(
@@ -70,7 +74,7 @@ export default function ProductForm() {
           timestamp: serverTimestamp(),
         },
         setProduct({ name: "", harga: "", kategori: "" }),
-        showAlert("success", `Product is added succesfully`)
+        showAlert("success", `Product is succesfully added to Firebase`)
       ).then(() => {
         axios
           .post("http://localhost:8000/api/products", {
@@ -83,6 +87,10 @@ export default function ProductForm() {
             console.error(err);
             showAlert("error", `Product can't be added to MySQL`);
           });
+      })
+      .catch((err) => {
+        console.error(err);
+        showAlert("error", `Product can't be added to Firebase`);
       });
     }
   };

@@ -45,7 +45,7 @@ export default function EmployeeForm() {
         setEmployee({ name: "", email: "", jabatan: "", telepon: "" }),
         showAlert(
           "success",
-          `Employee with id ${docRef.id} is updated succesfully`
+          `Employee with id ${docRef.id} is succesfully updated in Firebase`
         )
       ).then(() => {
         
@@ -61,6 +61,10 @@ export default function EmployeeForm() {
             console.error(err);
             showAlert("error", `Employee can't be updated in MySQL`);
           });
+      })
+      .catch((err) => {
+        console.error(err);
+        showAlert("error", `Employee can't be updated in Firebase`);
       });
     } else {
       addDoc(
@@ -70,7 +74,7 @@ export default function EmployeeForm() {
           timestamp: serverTimestamp(),
         },
         setEmployee({ name: "", email: "", jabatan: "", telepon: "" }),
-        showAlert("success", `Employee is added succesfully`)
+        showAlert("success", `Employee is succesfully added to Firebase`)
       ).then(() => {
         axios
           .post("http://localhost:8000/api/employees", {
@@ -83,6 +87,10 @@ export default function EmployeeForm() {
             console.error(err);
             showAlert("error", `Employee can't be added to MySQL`);
           });
+      })
+      .catch((err) => {
+        console.error(err);
+        showAlert("error", `Employee can't be added to Firebase`);
       });
     }
   };

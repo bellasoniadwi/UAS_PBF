@@ -47,7 +47,7 @@ export default function TransactionForm() {
         setTransaction({ name: "", product: "", total: "" }),
         showAlert(
           "success",
-          `Transaction with id ${docRef.id} is updated succesfully`
+          `Transaction with id ${docRef.id} is succesfully updated in Firebase`
         )
       ).then(() => {
         
@@ -63,6 +63,10 @@ export default function TransactionForm() {
             console.error(err);
             showAlert("error", `Transaction can't be updated in MySQL`);
           });
+      })
+      .catch((err) => {
+        console.error(err);
+        showAlert("error", `Transaction can't be updated in Firebase`);
       });
     } else {
       addDoc(
@@ -72,7 +76,7 @@ export default function TransactionForm() {
           timestamp: serverTimestamp(),
         },
         setTransaction({ name: "", product: "", total: "" }),
-        showAlert("success", `Transaction is added succesfully`)
+        showAlert("success", `Transaction is succesfully added to Firebase`)
       ).then(() => {
         axios
           .post("http://localhost:8000/api/transactions", {
@@ -85,6 +89,10 @@ export default function TransactionForm() {
             console.error(err);
             showAlert("error", `Transaction can't be added to MySQL`);
           });
+      })
+      .catch((err) => {
+        console.error(err);
+        showAlert("error", `Transaction can't be added to Firebase`);
       });
     }
   };

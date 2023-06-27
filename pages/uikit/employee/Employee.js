@@ -17,8 +17,10 @@ const Employee = ({ id, timestamp, name, email, telepon, jabatan }) => {
   const deleteEmployee = async (id, e) => {
     e.stopPropagation();
     const docRef = doc(db, "employees", id);
-    deleteDoc(docRef).then(() => {
-      showAlert("success", `Employee with id ${id} deleted successffully`);
+    deleteDoc(
+      docRef, 
+      showAlert("success", `Employee with id ${id} is succesfully deleted from Firebase`))
+    .then(() => {  
       // Hapus data dari API Laravel
       axios
         .delete(`http://localhost:8000/api/employees/${name}`)
@@ -31,6 +33,10 @@ const Employee = ({ id, timestamp, name, email, telepon, jabatan }) => {
           console.error(error);
           showAlert("error", `Employee can't be deleted from MySQL`);
         });
+    }).catch((error) => {
+      // Handling error
+      console.error(error);
+      showAlert("error", `Employee can't be deleted from Firebase`);
     });
   };
 

@@ -13,18 +13,14 @@ const Member = ({ id, timestamp, name, alamat, telepon, usia }) => {
   // menuju detail
   const router = useRouter();
 
-  //fungsi link to detail
-  const seeMore = (id, e) => {
-    e.stopPropagation();
-    router.push(`/pages/detail/members/${id}`);
-  };
-
   // fungsi delete
   const deleteMember = async (id, e) => {
     e.stopPropagation();
     const docRef = doc(db, "members", id);
-    deleteDoc(docRef).then(() => {
-      showAlert("success", `Member with id ${id} deleted successffully`);
+    deleteDoc(
+      docRef, 
+      showAlert("success", `Member with id ${id} is succesfully deleted from Firebase`))
+    .then(() => { 
       // Hapus data dari API Laravel
       axios
         .delete(`http://localhost:8000/api/members/${name}`)
@@ -37,7 +33,17 @@ const Member = ({ id, timestamp, name, alamat, telepon, usia }) => {
           console.error(error);
           showAlert("error", `Member can't be deleted from MySQL`);
         });
+    }).catch((error) => {
+      // Handling error
+      console.error(error);
+      showAlert("error", `Member can't be deleted from Firebase`);
     });
+  };
+
+  //fungsi link to detail
+  const seeMore = (id, e) => {
+    e.stopPropagation();
+    router.push(`/pages/detail/members/${id}`);
   };
 
   return (
