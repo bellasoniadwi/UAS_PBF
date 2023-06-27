@@ -56,7 +56,7 @@ const EmployeeDemo = () => {
 
     useEffect(() => {
         axios
-            .get(`${process.env.NEXT_PUBLIC_API_BACKEND}/api/employees`)
+            .get("http://localhost:8000/api/employees")
             .then(function (response) {
                 setDatas(response.data.data)
                 console.log(Datas)

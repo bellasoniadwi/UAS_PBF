@@ -55,7 +55,7 @@ const TransactionDemo = () => {
 
     useEffect(() => {
         axios
-            .get(`${process.env.NEXT_PUBLIC_API_BACKEND}/api/products`)
+            .get("http://localhost:8000/api/transactions")
             .then(function (response) {
                 setDatas(response.data.data)
                 console.log(Datas)

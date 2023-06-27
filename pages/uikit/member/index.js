@@ -56,7 +56,7 @@ const MemberDemo = () => {
 
     useEffect(() => {
         axios
-            .get(`${process.env.NEXT_PUBLIC_API_BACKEND}/api/members`)
+            .get("http://localhost:8000/api/members")
             .then(function (response) {
                 setDatas(response.data.data)
                 console.log(Datas)
