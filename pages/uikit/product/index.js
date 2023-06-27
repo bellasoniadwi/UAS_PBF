@@ -92,7 +92,7 @@ const ProductDemo = () => {
                   id={products.id}
                   name={products.name}
                   kategori={products.kategori}
-                  harga={products.harga}
+                  harga={products.harga ? `Rp. ${products.harga}` : 'Price not available'}
                 />
               ))}
             </Grid>

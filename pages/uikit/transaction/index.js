@@ -98,7 +98,7 @@ const TransactionDemo = () => {
                   id={transactions.id}
                   name={transactions.name}
                   product={transactions.product}
-                  total={transactions.total}
+                  total={transactions.total ? `Rp. ${transactions.total}` : 'Total Transaction not available'}
                 />
               ))}
             </Grid>
